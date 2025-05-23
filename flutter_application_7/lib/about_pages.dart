@@ -1,10 +1,4 @@
 import 'package:flutter/material.dart';
-import 'display_page.dart';
-import 'welcome_page2.dart';
-import 'my_futurebuilder_page.dart';
-import 'http_basic.dart';
-import 'detail_page.dart';
-import 'my_listpage.dart';
 
 class AboutPages extends StatelessWidget {
   const AboutPages({super.key});
