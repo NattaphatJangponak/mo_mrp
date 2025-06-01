@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_7/pages/detail_page.dart';
 
 class ProductCard extends StatelessWidget {
+  final int id;
   final String name;
   final String description;
   final String imageUrl;
 
   const ProductCard(
       {super.key,
+      required this.id,
       required this.name,
       required this.description,
       required this.imageUrl});
@@ -43,7 +45,9 @@ class ProductCard extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailPage(productId: 1),
+                  builder: (context) => DetailPage(
+                    productId: id,
+                  ),
                 ));
           },
         ),

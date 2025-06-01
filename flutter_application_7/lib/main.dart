@@ -13,10 +13,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        appBarTheme:
-            const AppBarTheme(color: Color.fromARGB(255, 186, 224, 16)),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+        ),
         colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 162, 229, 18)),
+          seedColor: Colors.blue,
+          primary: Colors.blue,
+          secondary: Colors.blueAccent,
+        ),
         useMaterial3: true,
       ),
       home: const HomePage(),

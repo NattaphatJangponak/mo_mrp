@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_7/data.dart';
+import 'package:flutter_application_7/pages/lot_page.dart';
+import 'package:flutter_application_7/pages/scanner_page.dart';
+import 'package:flutter_application_7/pages/sn_page.dart';
 
 Future fetchData(String id) async {
   // implement fetch data
   await Future.delayed(const Duration(seconds: 2));
-  return {
-    "id": id,
-    "title": "Product $id",
-    "description":
-        "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "imageUrl":
-        "https://cdn.grange.co.uk/assets/new-cars/lamborghini/revuelto/revuelto-1_20241107093150469.png"
-  };
+  return products.firstWhere((product) => product['id'] == int.parse(id));
 }
 
 class DetailPage extends StatefulWidget {
@@ -27,7 +24,7 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Detail Page'),
+          title: const Text('Detail'),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
@@ -41,6 +38,7 @@ class _DetailPageState extends State<DetailPage> {
                 } else if (snapshot.hasData) {
                   final data = snapshot.data;
                   return Column(
+                    spacing: 16.0,
                     children: [
                       Align(
                         alignment: Alignment.topLeft,
@@ -49,7 +47,54 @@ class _DetailPageState extends State<DetailPage> {
                                 fontSize: 24, fontWeight: FontWeight.bold)),
                       ),
                       Image.network(data['imageUrl']),
-                      Text(data['description']),
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(data['description'])),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          FilledButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LotPage(),
+                                  ));
+                            },
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Colors.purple,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text('Lot'),
+                          ),
+                          FilledButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ScannerPage(),
+                                    ));
+                              },
+                              style: FilledButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text('Barcode')),
+                          FilledButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SnPage(),
+                                    ));
+                              },
+                              style: FilledButton.styleFrom(
+                                backgroundColor: Colors.orange,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text('S/N')),
+                        ],
+                      ),
                     ],
                   );
                 } else {

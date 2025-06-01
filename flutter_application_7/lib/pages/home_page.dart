@@ -1,38 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_7/data.dart';
 import 'package:flutter_application_7/widgets/product_card.dart';
 
 Future fetchAll() async {
   // implement fetch data
   await Future.delayed(const Duration(seconds: 2));
-  return [
-    {
-      "id": 1,
-      "title": "Product 1",
-      "description": "Description of Product 1",
-      "price": 100,
-      "star": 4.5,
-      "imageUrl":
-          "https://cdn.grange.co.uk/assets/new-cars/lamborghini/revuelto/revuelto-1_20241107093150469.png"
-    },
-    {
-      "id": 2,
-      "title": "Product 2",
-      "description": "Description of Product 2",
-      "price": 200,
-      "star": 4.0,
-      "imageUrl":
-          "https://cdn.grange.co.uk/assets/new-cars/lamborghini/revuelto/revuelto-1_20241107093150469.png"
-    },
-    {
-      "id": 3,
-      "title": "Product 3",
-      "description": "Description of Product 3",
-      "price": 300,
-      "star": 5.0,
-      "imageUrl":
-          "https://cdn.grange.co.uk/assets/new-cars/lamborghini/revuelto/revuelto-1_20241107093150469.png"
-    },
-  ];
+  return products;
 }
 
 class HomePage extends StatefulWidget {
@@ -74,6 +47,7 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       final product = products[index];
                       return ProductCard(
+                        id: product['id'],
                         name: product['title'],
                         description: product['description'],
                         imageUrl: product['imageUrl'],
