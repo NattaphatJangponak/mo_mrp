@@ -16,6 +16,7 @@ class ScannerPage extends StatefulWidget {
 }
 
 class _ScannerPageState extends State<ScannerPage> {
+  List<ScannerMock> items = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,13 +48,14 @@ class _ScannerPageState extends State<ScannerPage> {
                         data.fold(0, (sum, item) => sum + item.quantity);
                     return Column(
                       children: [
-                        DataTable(
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            columnSpacing: 24, // เพิ่ม spacing
                             columns: const [
-                              DataColumn(
-                                  label: Expanded(child: Text("Product"))),
-                              DataColumn(label: Expanded(child: Text("Qty"))),
-                              DataColumn(
-                                  label: Expanded(child: Text("Action"))),
+                              DataColumn(label: Text("Product")),
+                              DataColumn(label: Text("Qty")),
+                              DataColumn(label: Text("Action")),
                             ],
                             rows: data.map((item) {
                               return DataRow(cells: [
@@ -61,26 +63,34 @@ class _ScannerPageState extends State<ScannerPage> {
                                 DataCell(Text(item.quantity.toString())),
                                 DataCell(
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
                                     children: [
                                       IconButton(
                                         icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          _buildEditDialog(context, item);
-                                        },
+                                        onPressed: () =>
+                                            _buildEditDialog(context, item),
                                       ),
                                       IconButton(
                                         icon: const Icon(Icons.delete),
                                         onPressed: () {
-                                          _buildDeleteDialog(context, item);
+                                          _buildDeleteDialog(
+                                            context,
+                                            onConfirm: () {
+                                              setState(() {
+                                                items.remove(item);
+                                              });
+                                            },
+                                            title: item
+                                                .title, // หรือ item.lot แล้วแต่กรณี
+                                          );
                                         },
                                       ),
                                     ],
                                   ),
                                 ),
                               ]);
-                            }).toList()),
+                            }).toList(),
+                          ),
+                        ),
                         const SizedBox(height: 16),
                         Container(
                           color: Colors.white,
@@ -110,7 +120,25 @@ class _ScannerPageState extends State<ScannerPage> {
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text('Success'),
+                                          content:
+                                              const Text('Update successful!'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
                                     foregroundColor: Colors.white,
@@ -122,7 +150,7 @@ class _ScannerPageState extends State<ScannerPage> {
                                     elevation: 2,
                                   ),
                                   child: const Text(
-                                    'Send',
+                                    'Update',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -186,23 +214,25 @@ void _buildEditDialog(BuildContext context, ScannerMock item) {
   );
 }
 
-void _buildDeleteDialog(BuildContext context, ScannerMock item) {
+void _buildDeleteDialog(
+  BuildContext context, {
+  required VoidCallback onConfirm,
+  required String title,
+}) {
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
         title: const Text('Delete Item'),
-        content: Text('Are you sure you want to delete ${item.title}?'),
+        content: Text('Are you sure you want to delete "$title"?'),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+            onPressed: () => Navigator.of(context).pop(),
             child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              // Implement delete
+              onConfirm(); // เรียก callback เมื่อกดยืนยัน
               Navigator.of(context).pop();
             },
             child: const Text(

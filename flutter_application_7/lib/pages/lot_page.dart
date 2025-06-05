@@ -46,7 +46,10 @@ class _LotPageState extends State<LotPage> {
                     int sumQty = data.fold(0, (sum, lot) => sum + lot.qty);
                     return Column(
                       children: [
-                        DataTable(
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            columnSpacing: 24,
                             columns: const [
                               DataColumn(label: Expanded(child: Text("Lot"))),
                               DataColumn(
@@ -56,32 +59,37 @@ class _LotPageState extends State<LotPage> {
                                   label: Expanded(child: Text("Action"))),
                             ],
                             rows: data.map((lot) {
-                              return DataRow(cells: [
-                                DataCell(Text(lot.lot)),
-                                DataCell(Text(lot.product)),
-                                DataCell(Text(lot.qty.toString())),
-                                DataCell(
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          _buildEditDialog(context, lot);
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        onPressed: () {
-                                          _buildDeleteDialog(context, lot);
-                                        },
-                                      ),
-                                    ],
+                              return DataRow(
+                                cells: [
+                                  DataCell(Text(lot.lot)),
+                                  DataCell(Text(lot.product)),
+                                  DataCell(Text(lot.qty.toString())),
+                                  DataCell(
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit),
+                                          onPressed: () {
+                                            _buildEditDialog(context, lot);
+                                          },
+                                          visualDensity: VisualDensity.compact,
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () {
+                                            _buildDeleteDialog(context, lot);
+                                          },
+                                          visualDensity: VisualDensity.compact,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ]);
-                            }).toList()),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ),
                         const SizedBox(height: 16),
                         Container(
                           color: Colors.white,
@@ -111,7 +119,25 @@ class _LotPageState extends State<LotPage> {
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text('Success'),
+                                          content:
+                                              const Text('Update successful!'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
                                     foregroundColor: Colors.white,
@@ -123,7 +149,7 @@ class _LotPageState extends State<LotPage> {
                                     elevation: 2,
                                   ),
                                   child: const Text(
-                                    'Send',
+                                    'Update',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -206,7 +232,7 @@ void _buildDeleteDialog(BuildContext context, LotMock lot) {
               // Implement delete
               Navigator.of(context).pop();
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red))  ,
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
       );

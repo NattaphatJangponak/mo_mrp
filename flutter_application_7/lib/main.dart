@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_7/pages/home_page.dart';
+import 'package:flutter_application_7/pages/menu_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      // home: const HomePage(),
+      home: const MenuPage(),
     );
   }
 }

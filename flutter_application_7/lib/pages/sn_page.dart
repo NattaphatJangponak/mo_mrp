@@ -100,7 +100,25 @@ class _SnPageState extends State<SnPage> {
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text('Success'),
+                                          content:
+                                              const Text('Update successful!'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
                                     foregroundColor: Colors.white,
@@ -112,7 +130,7 @@ class _SnPageState extends State<SnPage> {
                                     elevation: 2,
                                   ),
                                   child: const Text(
-                                    'Send',
+                                    'Update',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -155,7 +173,7 @@ void _buildDeleteDialog(BuildContext context, MockSerialNumber item) {
               // Implement delete
               Navigator.of(context).pop();
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.white)),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
       );

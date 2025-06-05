@@ -96,6 +96,61 @@ final List<ScannerMock> scannerPageData = [
   ScannerMock(id: 6, title: "Product 6", quantity: 15),
 ];
 
+// lib/data.dart
+
+/// Mock data สำหรับรายการ stock
+final List<Map<String, String>> mockStockList = [
+  {'code': 'WH/IN/00003', 'po': 'PO0003'},
+  {'code': 'WH/IN/00002', 'po': 'PO0002'},
+  {'code': 'WH/IN/00001', 'po': 'PO0001'},
+  {'code': 'WH/IN/00006', 'po': 'PO0006'},
+  {'code': 'WH/IN/00003', 'po': 'PO0003'},
+];
+
+/// Mock data สำหรับรายการ stock
+final List<Map<String, String>> mockStockList2 = [
+  {'code': 'WH/OUT/00003', 'so': 'SO0003'},
+  {'code': 'WH/OUT/00002', 'so': 'SO0002'},
+  {'code': 'WH/OUT/00001', 'so': 'SO0001'},
+  {'code': 'WH/OUT/00006', 'so': 'SO0006'},
+  {'code': 'WH/OUT/00003', 'so': 'SO0003'},
+];
+
+class CountingItem {
+  final String product;
+  int quantity;
+  bool selected;
+  final String locationId;
+  final String lotId;
+
+  CountingItem({
+    required this.product,
+    required this.quantity,
+    required this.locationId,
+    required this.lotId,
+    this.selected = true,
+  });
+}
+
+final List<CountingItem> countingStockMock = [
+  CountingItem(
+      product: 'Product01', quantity: 3, locationId: 'LOC001', lotId: 'LOT001'),
+  CountingItem(
+      product: 'Product02', quantity: 5, locationId: 'LOC002', lotId: 'LOT002'),
+  CountingItem(
+      product: 'Product03', quantity: 2, locationId: 'LOC001', lotId: 'LOT003'),
+  CountingItem(
+      product: 'Product04', quantity: 1, locationId: 'LOC003', lotId: 'LOT004'),
+  CountingItem(
+      product: 'Product05', quantity: 2, locationId: 'LOC002', lotId: 'LOT005'),
+  CountingItem(
+      product: 'Product06', quantity: 3, locationId: 'LOC001', lotId: 'LOT006'),
+  CountingItem(
+      product: 'Product07', quantity: 4, locationId: 'LOC003', lotId: 'LOT007'),
+  CountingItem(
+      product: 'Product08', quantity: 5, locationId: 'LOC004', lotId: 'LOT008'),
+];
+
 class LotMock {
   final int id;
   final String lot;

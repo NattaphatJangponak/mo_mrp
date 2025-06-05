@@ -9,7 +9,8 @@ Future fetchAll() async {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String? docCode;
+  const HomePage({super.key, this.docCode});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -25,6 +26,26 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             // QR Code Scanner
+            if (widget.docCode != null)
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Center(
+                    child: Text(
+                      widget.docCode!,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.indigo,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
 
             // item list
             FutureBuilder(
