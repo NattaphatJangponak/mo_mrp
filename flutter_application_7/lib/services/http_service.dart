@@ -8,7 +8,7 @@ import '../models/stockitem.dart';
 
 class HttpService {
   Future<List<StockItem>> fetchWhInList() async {
-    final String url = 'http://192.168.1.119:8069/get_list_whin';
+    final String url = 'http://192.168.1.118:8069/get_list_whin';
     final uri = Uri.parse(url);
 
     final request = http.Request("GET", uri)
@@ -36,7 +36,7 @@ class HttpService {
   }
 
   Future<List<Map<String, dynamic>>> fetchPoLines(String poName) async {
-    final String url = 'http://192.168.1.119:8069/get_list_po';
+    final String url = 'http://192.168.1.118:8069/get_list_po';
 
     final response = await http.post(
       Uri.parse(url),

@@ -79,10 +79,11 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       final line = lines[index];
                       return ProductCard(
-                        id: index,  
+                        id: index,
                         name: line['line_name'] ?? '',
                         description: 'Qty: ${line['qty']}',
-                        imageUrl: '',  
+                        imageUrl: '',
+                        docCode: widget.docCode,
                       );
                     },
                   );

@@ -6,13 +6,18 @@ class ProductCard extends StatelessWidget {
   final String name;
   final String description;
   final String imageUrl;
+  final String? docCode;
+  final VoidCallback? onTap;
 
-  const ProductCard(
-      {super.key,
-      required this.id,
-      required this.name,
-      required this.description,
-      required this.imageUrl});
+  const ProductCard({
+    super.key,
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.imageUrl,
+    this.docCode,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +55,7 @@ class ProductCard extends StatelessWidget {
                     data: {
                       'name': name,
                       'qty': description,
+                      'docCode': docCode,
                     },
                   ),
                 ),
