@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_7/data.dart';
 import 'package:flutter_application_7/widgets/product_card.dart';
 
+import 'package:flutter_application_7/services/http_service.dart';
+
 Future fetchAll() async {
   // implement fetch data
   await Future.delayed(const Duration(seconds: 2));
@@ -17,6 +19,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final httpService = HttpService();
+  late Future<List<Map<String, dynamic>>> futureData;
+
+  @override
+  void initState() {
+    super.initState();
+    futureData = httpService.fetchPoLines(widget.docCode ?? '');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,30 +59,30 @@ class _HomePageState extends State<HomePage> {
               ),
 
             // item list
-            FutureBuilder(
-                future: fetchAll(),
+            FutureBuilder<List<Map<String, dynamic>>>(
+                future: futureData,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Text('Something went wrong: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data.isEmpty) {
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Text('No data available');
                   }
 
-                  final products = snapshot.data;
+                  final lines = snapshot.data!;
 
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: products.length,
+                    itemCount: lines.length,
                     itemBuilder: (context, index) {
-                      final product = products[index];
+                      final line = lines[index];
                       return ProductCard(
-                        id: product['id'],
-                        name: product['title'],
-                        description: product['description'],
-                        imageUrl: product['imageUrl'],
+                        id: index,  
+                        name: line['line_name'] ?? '',
+                        description: 'Qty: ${line['qty']}',
+                        imageUrl: '',  
                       );
                     },
                   );

@@ -35,6 +35,30 @@ class HttpService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchPoLines(String poName) async {
+    final String url = 'http://192.168.1.119:8069/get_list_po';
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        "jsonrpc": "2.0",
+        "params": {"po_name": poName}
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonMap = json.decode(response.body);
+      final result = jsonMap['result'] as List;
+      return result.map((e) => e as Map<String, dynamic>).toList();
+    } else {
+      throw Exception('Failed to load PO lines');
+    }
+  }
+
   Future<List<Product>> fetchData({required String strUrl}) async {
     debugPrint('url: $strUrl');
     final response = await http.get(Uri.parse(strUrl), headers: {

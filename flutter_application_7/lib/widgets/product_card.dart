@@ -22,35 +22,39 @@ class ProductCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: ListTile(
-          contentPadding: const EdgeInsets.all(8),
-          leading: Image.network(
-            imageUrl,
-            width: 100,
-            fit: BoxFit.cover,
-          ),
-          title: Text(
-            name,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(
-            description,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          trailing: const Icon(Icons.arrow_forward_ios),
-          onTap: () {
-            debugPrint('Go to detail page');
-            Navigator.push(
+            contentPadding: const EdgeInsets.all(8),
+            leading: imageUrl != null && imageUrl!.isNotEmpty
+                ? Image.network(
+                    imageUrl!,
+                    width: 100,
+                    fit: BoxFit.cover,
+                  )
+                : null,
+            title: Text(
+              name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              description,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => DetailPage(
-                    productId: id,
+                    data: {
+                      'name': name,
+                      'qty': description,
+                    },
                   ),
-                ));
-          },
-        ),
+                ),
+              );
+            }),
       ),
     );
   }
