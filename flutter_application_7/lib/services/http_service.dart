@@ -9,7 +9,7 @@ import '../models/stockitem.dart';
 // po
 class HttpService {
   Future<List<StockItem>> fetchWhInList() async {
-    final String url = 'http://192.168.154.40:8069/get_list_whin';
+    final String url = 'http://172.20.10.4:8069/get_list_whin';
     final uri = Uri.parse(url);
 
     final request = http.Request("GET", uri)
@@ -37,7 +37,7 @@ class HttpService {
   }
 
   Future<List<Map<String, dynamic>>> fetchPoLines(String poName) async {
-    final String url = 'http://192.168.154.40:8069/get_list_po';
+    final String url = 'http://172.20.10.4:8069/get_list_po';
 
     final response = await http.post(
       Uri.parse(url),
@@ -100,7 +100,7 @@ class HttpService {
   // so
 
   Future<List<StockItem>> fetchWhOutList() async {
-    final String url = 'http://192.168.154.40:8069/get_list_whout';
+    final String url = 'http://172.20.10.4:8069/get_list_whout';
     final uri = Uri.parse(url);
 
     final request = http.Request("GET", uri)
@@ -128,7 +128,7 @@ class HttpService {
   }
 
   Future<List<Map<String, dynamic>>> fetchSoLines(String soName) async {
-    final String url = 'http://192.168.154.40:8069/get_list_so';
+    final String url = 'http://172.20.10.4:8069/get_list_so';
 
     final response = await http.post(
       Uri.parse(url),
