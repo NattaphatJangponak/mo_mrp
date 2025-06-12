@@ -7,6 +7,7 @@ class ProductCard extends StatelessWidget {
   final String description;
   final String imageUrl;
   final String? docCode;
+  final String mode;
   final VoidCallback? onTap;
 
   const ProductCard({
@@ -16,6 +17,7 @@ class ProductCard extends StatelessWidget {
     required this.description,
     required this.imageUrl,
     this.docCode,
+    required this.mode,
     this.onTap,
   });
 
@@ -57,6 +59,8 @@ class ProductCard extends StatelessWidget {
                       'qty': description,
                       'docCode': docCode,
                     },
+                    docCode: docCode,
+                    mode: mode, // ✅ อย่าลืมส่ง mode
                   ),
                 ),
               );

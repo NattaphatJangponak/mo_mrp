@@ -12,7 +12,8 @@ Future fetchAll() async {
 
 class HomePage extends StatefulWidget {
   final String? docCode;
-  const HomePage({super.key, this.docCode});
+  final String mode;
+  const HomePage({super.key, this.docCode, required this.mode});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -25,7 +26,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    futureData = httpService.fetchPoLines(widget.docCode ?? '');
+
+    if (widget.docCode != null && widget.docCode!.startsWith('P')) {
+      futureData = httpService.fetchPoLines(widget.docCode!);
+    } else if (widget.docCode != null && widget.docCode!.startsWith('S')) {
+      futureData = httpService.fetchSoLines(widget.docCode!);
+    } else {
+      futureData = Future.value([]);
+    }
   }
 
   @override
@@ -84,6 +92,7 @@ class _HomePageState extends State<HomePage> {
                         description: 'Qty: ${line['qty']}',
                         imageUrl: '',
                         docCode: widget.docCode,
+                        mode: widget.mode,
                       );
                     },
                   );

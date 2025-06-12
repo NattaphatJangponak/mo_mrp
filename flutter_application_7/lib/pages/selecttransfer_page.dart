@@ -24,7 +24,8 @@ class SelectTransferPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const HomePage(docCode: 'Source Location'),
+                    builder: (_) => const HomePage(
+                        docCode: 'Source Location', mode: 'SeLocat'),
                   ),
                 );
               },
@@ -46,8 +47,8 @@ class SelectTransferPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) =>
-                        const HomePage(docCode: 'Destination Location'),
+                    builder: (_) => const HomePage(
+                        docCode: 'Destination Location', mode: 'DeLocat'),
                   ),
                 );
               },

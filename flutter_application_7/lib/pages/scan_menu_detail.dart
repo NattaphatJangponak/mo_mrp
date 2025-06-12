@@ -12,7 +12,9 @@ class ScanMenuDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("My App")),
       body: FutureBuilder<List<StockItem>>(
-        future: HttpService().fetchWhInList(),
+        future: mode == 'in'
+            ? HttpService().fetchWhInList()
+            : HttpService().fetchWhOutList(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -78,7 +80,7 @@ class ScanMenuDetailPage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => HomePage(docCode: docCode),
+              builder: (_) => HomePage(docCode: docCode, mode: mode),
             ),
           );
         },

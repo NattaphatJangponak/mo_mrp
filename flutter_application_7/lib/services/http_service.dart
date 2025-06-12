@@ -6,9 +6,10 @@ import 'package:http/http.dart' as http;
 import '../models/product.dart';
 import '../models/stockitem.dart';
 
+// po
 class HttpService {
   Future<List<StockItem>> fetchWhInList() async {
-    final String url = 'http://192.168.1.118:8069/get_list_whin';
+    final String url = 'http://192.168.154.40:8069/get_list_whin';
     final uri = Uri.parse(url);
 
     final request = http.Request("GET", uri)
@@ -36,7 +37,7 @@ class HttpService {
   }
 
   Future<List<Map<String, dynamic>>> fetchPoLines(String poName) async {
-    final String url = 'http://192.168.1.118:8069/get_list_po';
+    final String url = 'http://192.168.154.40:8069/get_list_po';
 
     final response = await http.post(
       Uri.parse(url),
@@ -93,6 +94,60 @@ class HttpService {
     } else {
       debugPrint('failed loading data!');
       throw Exception('Failed to load data!');
+    }
+  }
+
+  // so
+
+  Future<List<StockItem>> fetchWhOutList() async {
+    final String url = 'http://192.168.154.40:8069/get_list_whout';
+    final uri = Uri.parse(url);
+
+    final request = http.Request("GET", uri)
+      ..headers.addAll({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      })
+      ..body = jsonEncode({}); // ✅ ส่ง body {} แบบ GET
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonMap = json.decode(response.body);
+
+      if (jsonMap.containsKey('result')) {
+        final List<dynamic> resultList = jsonMap['result'];
+        return resultList.map((e) => StockItem.fromJson(e)).toList();
+      } else {
+        throw Exception('⚠️ No "result" key found');
+      }
+    } else {
+      throw Exception('❌ Failed to load WHOUT');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchSoLines(String soName) async {
+    final String url = 'http://192.168.154.40:8069/get_list_so';
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        "jsonrpc": "2.0",
+        "params": {"so_name": soName}
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonMap = json.decode(response.body);
+      final result = jsonMap['result'] as List;
+      return result.map((e) => e as Map<String, dynamic>).toList();
+    } else {
+      throw Exception('Failed to load SO lines');
     }
   }
 }
