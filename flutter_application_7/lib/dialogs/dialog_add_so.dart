@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_application_7/pages/scanner/dialog_qr_add_text.dart';
 
 // SO
 void showAddLotSoDialog(BuildContext context, String so, String barcode) {
   final barcodeController = TextEditingController();
   // text: barcode
   final issueQtyController = TextEditingController();
-
+  final barcodeFocus = FocusNode();
+  TextEditingController? currentFocusController;
   List<Map<String, TextEditingController>> lotList = [
     {
       "lot": TextEditingController(),
@@ -34,7 +36,9 @@ void showAddLotSoDialog(BuildContext context, String so, String barcode) {
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: barcodeController,
+                    focusNode: barcodeFocus,
                     decoration: const InputDecoration(labelText: 'Barcode'),
+                    onTap: () => currentFocusController = barcodeController,
                   ),
                   const SizedBox(height: 12),
                   TextFormField(
@@ -53,6 +57,7 @@ void showAddLotSoDialog(BuildContext context, String so, String barcode) {
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Row(
                           children: [
+                            // Lot input
                             Expanded(
                               child: TextFormField(
                                 controller: lotList[index]["lot"],
@@ -62,6 +67,8 @@ void showAddLotSoDialog(BuildContext context, String so, String barcode) {
                               ),
                             ),
                             const SizedBox(width: 8),
+
+                            // Qty input
                             Expanded(
                               child: TextFormField(
                                 controller: lotList[index]["qty"],
@@ -70,8 +77,41 @@ void showAddLotSoDialog(BuildContext context, String so, String barcode) {
                                     const InputDecoration(labelText: 'Qty'),
                               ),
                             ),
+                            const SizedBox(width: 8),
+
+                            // QR scan button
+                            IconButton(
+                              icon: const Icon(Icons.qr_code_scanner),
+                              tooltip: 'Scan to Lot ${index + 1}',
+                              onPressed: () async {
+                                final result =
+                                    await showQrScannerDialog(context);
+                                if (result != null) {
+                                  final text = lotList[index]["lot"]!.text;
+                                  final selection =
+                                      lotList[index]["lot"]!.selection;
+
+                                  final newText = text.replaceRange(
+                                    selection.start,
+                                    selection.end,
+                                    result,
+                                  );
+
+                                  setState(() {
+                                    lotList[index]["lot"]!.text = newText;
+                                    lotList[index]["lot"]!.selection =
+                                        TextSelection.collapsed(
+                                      offset: selection.start + result.length,
+                                    );
+                                  });
+                                }
+                              },
+                            ),
+
+                            // Delete button
                             IconButton(
                               icon: const Icon(Icons.delete),
+                              tooltip: 'Delete Lot ${index + 1}',
                               onPressed: () {
                                 setState(() {
                                   lotList.removeAt(index);
@@ -100,6 +140,28 @@ void showAddLotSoDialog(BuildContext context, String so, String barcode) {
               ),
             ),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.qr_code_scanner),
+                tooltip: 'Scan QR',
+                onPressed: () async {
+                  final result = await showQrScannerDialog(context);
+                  if (result != null && currentFocusController != null) {
+                    final text = currentFocusController!.text;
+                    final selection = currentFocusController!.selection;
+
+                    final newText = text.replaceRange(
+                      selection.start,
+                      selection.end,
+                      result,
+                    );
+
+                    currentFocusController!.text = newText;
+                    currentFocusController!.selection = TextSelection.collapsed(
+                      offset: selection.start + result.length,
+                    );
+                  }
+                },
+              ),
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text("Cancel"),
@@ -135,7 +197,7 @@ void showAddLotSoDialog(BuildContext context, String so, String barcode) {
 
                   try {
                     final response = await http.post(
-                      Uri.parse("http://172.20.10.4:8069/stock_issue_lot"),
+                      Uri.parse("http://192.168.1.116:8069/stock_issue_lot"),
                       headers: {"Content-Type": "application/json"},
                       body: jsonEncode(payload),
                     );
@@ -168,6 +230,9 @@ void showAddBarSoDialog(BuildContext context, String so) {
   final barcodeController = TextEditingController();
   final qtyController = TextEditingController();
 
+  final barcodeFocus = FocusNode();
+  TextEditingController? currentFocusController;
+
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -187,7 +252,9 @@ void showAddBarSoDialog(BuildContext context, String so) {
 
             TextFormField(
               controller: barcodeController,
+              focusNode: barcodeFocus,
               decoration: const InputDecoration(labelText: 'Barcode'),
+              onTap: () => currentFocusController = barcodeController,
             ),
             const SizedBox(height: 12),
 
@@ -200,6 +267,28 @@ void showAddBarSoDialog(BuildContext context, String so) {
         ),
       ),
       actions: [
+        IconButton(
+          icon: const Icon(Icons.qr_code_scanner),
+          tooltip: 'Scan QR',
+          onPressed: () async {
+            final result = await showQrScannerDialog(context);
+            if (result != null && currentFocusController != null) {
+              final text = currentFocusController!.text;
+              final selection = currentFocusController!.selection;
+
+              final newText = text.replaceRange(
+                selection.start,
+                selection.end,
+                result,
+              );
+
+              currentFocusController!.text = newText;
+              currentFocusController!.selection = TextSelection.collapsed(
+                offset: selection.start + result.length,
+              );
+            }
+          },
+        ),
         TextButton(
           onPressed: () => Navigator.pop(context),
           style: TextButton.styleFrom(backgroundColor: Colors.grey[300]),
@@ -231,7 +320,7 @@ void showAddBarSoDialog(BuildContext context, String so) {
 
             try {
               final response = await http.post(
-                Uri.parse('http://172.20.10.4:8069/stock_issue_barcode'),
+                Uri.parse('http://192.168.1.116:8069/stock_issue_barcode'),
                 headers: {"Content-Type": "application/json"},
                 body: jsonEncode(payload),
               );
@@ -261,6 +350,10 @@ void showAddSnSoDialog(BuildContext context, String so, String barcode) {
   final qtyController = TextEditingController();
   List<TextEditingController> snControllers = [TextEditingController()];
 
+  final barcodeFocus = FocusNode();
+  final snFocus = FocusNode();
+  TextEditingController? currentFocusController;
+
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -283,7 +376,9 @@ void showAddSnSoDialog(BuildContext context, String so, String barcode) {
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: barcodeController,
+                    focusNode: barcodeFocus,
                     decoration: const InputDecoration(labelText: 'Barcode'),
+                    onTap: () => currentFocusController = barcodeController,
                   ),
                   const SizedBox(height: 12),
 
@@ -332,7 +427,36 @@ void showAddSnSoDialog(BuildContext context, String so, String barcode) {
                             decoration: InputDecoration(
                               labelText: 'SN ${index + 1}',
                               border: const OutlineInputBorder(),
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.qr_code_scanner),
+                                tooltip: 'Scan to SN ${index + 1}',
+                                onPressed: () async {
+                                  final result =
+                                      await showQrScannerDialog(context);
+                                  if (result != null) {
+                                    final text = snControllers[index].text;
+                                    final selection =
+                                        snControllers[index].selection;
+
+                                    final newText = text.replaceRange(
+                                      selection.start,
+                                      selection.end,
+                                      result,
+                                    );
+
+                                    setState(() {
+                                      snControllers[index].text = newText;
+                                      snControllers[index].selection =
+                                          TextSelection.collapsed(
+                                        offset: selection.start + result.length,
+                                      );
+                                    });
+                                  }
+                                },
+                              ),
                             ),
+                            onTap: () =>
+                                currentFocusController = snControllers[index],
                           ),
                         ),
                       );
@@ -354,6 +478,28 @@ void showAddSnSoDialog(BuildContext context, String so, String barcode) {
             ),
           ),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.qr_code_scanner),
+              tooltip: 'Scan QR',
+              onPressed: () async {
+                final result = await showQrScannerDialog(context);
+                if (result != null && currentFocusController != null) {
+                  final text = currentFocusController!.text;
+                  final selection = currentFocusController!.selection;
+
+                  final newText = text.replaceRange(
+                    selection.start,
+                    selection.end,
+                    result,
+                  );
+
+                  currentFocusController!.text = newText;
+                  currentFocusController!.selection = TextSelection.collapsed(
+                    offset: selection.start + result.length,
+                  );
+                }
+              },
+            ),
             TextButton(
               onPressed: () => Navigator.pop(context),
               style:
@@ -379,8 +525,7 @@ void showAddSnSoDialog(BuildContext context, String so, String barcode) {
                     "so": so,
                     "barcode": barcodeController.text.trim(),
                     "sn_no": snList,
-                    "issue_qty":
-                        int.tryParse(qtyController.text.trim()) ?? 0,
+                    "issue_qty": int.tryParse(qtyController.text.trim()) ?? 0,
                   }
                 };
 
@@ -393,7 +538,7 @@ void showAddSnSoDialog(BuildContext context, String so, String barcode) {
 
                 try {
                   final response = await http.post(
-                    Uri.parse('http://172.20.10.4:8069/stock_issue_sn'),
+                    Uri.parse('http://192.168.1.116:8069/stock_issue_sn'),
                     headers: {"Content-Type": "application/json"},
                     body: jsonEncode(payload),
                   );
