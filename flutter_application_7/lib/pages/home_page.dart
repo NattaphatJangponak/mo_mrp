@@ -27,12 +27,18 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    if (widget.docCode != null && widget.docCode!.startsWith('P')) {
-      futureData = httpService.fetchPoLines(widget.docCode!);
+    if (widget.mode == 'transfer') {
+      futureData = httpService.fetchTrnLines(
+          widget.docCode!); // ใช้ fetchTrnLines สำหรับ 'transfer'
+    } else if (widget.docCode != null && widget.docCode!.startsWith('P')) {
+      futureData = httpService
+          .fetchPoLines(widget.docCode!); // ใช้ fetchPoLines สำหรับ 'P'
     } else if (widget.docCode != null && widget.docCode!.startsWith('S')) {
-      futureData = httpService.fetchSoLines(widget.docCode!);
+      futureData = httpService
+          .fetchSoLines(widget.docCode!); // ใช้ fetchSoLines สำหรับ 'S'
     } else {
-      futureData = Future.value([]);
+      futureData = Future.value(
+          []); // ถ้าไม่มี docCode หรือไม่ตรงกับกรณีใดๆ ก็คืนค่าว่าง
     }
   }
 

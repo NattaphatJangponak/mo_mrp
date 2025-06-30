@@ -5,6 +5,7 @@ import 'package:flutter_application_7/pages/sn_page.dart';
 
 import 'package:flutter_application_7/dialogs/dialog_add_so.dart';
 import 'package:flutter_application_7/dialogs/dialog_add_po.dart';
+import 'package:flutter_application_7/dialogs/dialog_prod_tranfer.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -55,128 +56,166 @@ class DetailPage extends StatelessWidget {
             const SizedBox(height: 8),
             Text('${data['qty'] ?? '-'}'),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                FilledButton(
-                  onPressed: () {
-                    if (mode == 'in') {
-                      print(mode);
-                      showAddLotPoDialog(context, data['docCode']);
-                    } else if (mode == 'out') {
-                      print(mode);
-                      showAddLotSoDialog(
-                        context,
-                        data['docCode'],
-                        data['name'],
-                      );
-                    }
-                  },
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.purple,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Add Lot'),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    if (mode == 'in') {
-                      print(mode);
-                      showAddBarPoDialog(context, data['docCode']);
-                    } else if (mode == 'out') {
-                      print(mode);
-                      showAddBarSoDialog(context, data['docCode']);
-                    }
-                  },
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Add Barcode'),
-                ),
-
-                FilledButton(
-                  onPressed: () {
-                    if (mode == 'in') {
-                      print(mode);
-                      showAddSnPoDialog(context, data['docCode'], data['name']);
-                    } else if (mode == 'out') {
-                      print(mode);
-                      showAddSnSoDialog(context, data['docCode'], data['name']);
-                    }
-                  },
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Add S/N'),
-                ),
-                // FilledButton(
-                //   onPressed: () => showAddBarPoDialog(context, data['docCode']),
-                //   style: FilledButton.styleFrom(
-                //     backgroundColor: Colors.blue,
-                //     foregroundColor: Colors.white,
-                //   ),
-                //   child: const Text('Add Bar'),
-                // ),
-
-                // FilledButton(
-                //   onPressed: () =>
-                //       showAddSnPoDialog(context, data['docCode'], data['name']),
-                //   style: FilledButton.styleFrom(
-                //     backgroundColor: Colors.orange,
-                //     foregroundColor: Colors.white,
-                //   ),
-                //   child: const Text('S/N'),
-                // ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+            if (mode == 'transfer')
+              // แสดงปุ่ม "Transfer Product" เท่านั้นเมื่อ mode == 'transfer'
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // ตัวอย่างโค้ดจากหน้าที่เรียกใช้ showTransferProductDialog
                   FilledButton(
                     onPressed: () {
-                      Navigator.push(
+                      // ตรวจสอบค่าของ qty จาก data['qty'] ก่อน
+                      String qty = data['qty']?.toString() ??
+                          '0'; // ถ้าไม่มีค่าให้ใช้ '0' แทน
+
+                      // แสดงค่าของ qty สำหรับการตรวจสอบ
+                      print('Qty from Detail Page: $qty');
+
+                      // เรียกใช้ showTransferProductDialog พร้อมส่งค่า qty
+                      showTransferProductDialog(
                         context,
-                        MaterialPageRoute(builder: (context) => LotPage()),
+                        data['docCode'], // ส่ง data['docCode'] เป็น 'code'
+                        data['name'], // ส่ง data['name'] เป็น 'barcode'
+                        qty, // ส่ง qty จาก Detail Page
                       );
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor: Colors.purple,
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text('Lot Summary'),
+                    child: const Text('Transfer Product'),
+                  )
+                ],
+              ),
+            if (mode != 'transfer')
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  FilledButton(
+                    onPressed: () {
+                      if (mode == 'in') {
+                        print(mode);
+                        showAddLotPoDialog(context, data['docCode']);
+                      } else if (mode == 'out') {
+                        print(mode);
+                        showAddLotSoDialog(
+                          context,
+                          data['docCode'],
+                          data['name'],
+                        );
+                      }
+                    },
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Add Lot'),
                   ),
                   FilledButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ScannerPage()),
-                      );
+                      if (mode == 'in') {
+                        print(mode);
+                        showAddBarPoDialog(context, data['docCode']);
+                      } else if (mode == 'out') {
+                        print(mode);
+                        showAddBarSoDialog(context, data['docCode']);
+                      }
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text('Barcode Summary'),
+                    child: const Text('Add Barcode'),
                   ),
+
                   FilledButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SnPage()),
-                      );
+                      if (mode == 'in') {
+                        print(mode);
+                        showAddSnPoDialog(
+                            context, data['docCode'], data['name']);
+                      } else if (mode == 'out') {
+                        print(mode);
+                        showAddSnSoDialog(
+                            context, data['docCode'], data['name']);
+                      }
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor: Colors.orange,
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text('S/N Summary'),
+                    child: const Text('Add S/N'),
                   ),
+                  // FilledButton(
+                  //   onPressed: () => showAddBarPoDialog(context, data['docCode']),
+                  //   style: FilledButton.styleFrom(
+                  //     backgroundColor: Colors.blue,
+                  //     foregroundColor: Colors.white,
+                  //   ),
+                  //   child: const Text('Add Bar'),
+                  // ),
+
+                  // FilledButton(
+                  //   onPressed: () =>
+                  //       showAddSnPoDialog(context, data['docCode'], data['name']),
+                  //   style: FilledButton.styleFrom(
+                  //     backgroundColor: Colors.orange,
+                  //     foregroundColor: Colors.white,
+                  //   ),
+                  //   child: const Text('S/N'),
+                  // ),
                 ],
               ),
+            const SizedBox(height: 8),
+            Center(
+              child: mode != 'transfer'
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        FilledButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LotPage()),
+                            );
+                          },
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.purple,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Lot Summary'),
+                        ),
+                        FilledButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ScannerPage()),
+                            );
+                          },
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Barcode Summary'),
+                        ),
+                        FilledButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SnPage()),
+                            );
+                          },
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('S/N Summary'),
+                        ),
+                      ],
+                    )
+                  : Container(),
             ),
           ],
         ),

@@ -111,7 +111,7 @@ void showAddLotPoDialog(BuildContext context, String po) {
 
             try {
               final response = await http.post(
-                Uri.parse('http://192.168.1.116:8069/stock_receive_lot'),
+                Uri.parse('http://192.168.1.115:8069/stock_receive_lot'),
                 headers: {"Content-Type": "application/json"},
                 body: jsonEncode(payload),
               );
@@ -230,7 +230,7 @@ void showAddBarPoDialog(BuildContext context, String po) {
 
             try {
               final response = await http.post(
-                Uri.parse('http://192.168.1.116:8069/stock_receive_barcode'),
+                Uri.parse('http://192.168.1.115:8069/stock_receive_barcode'),
                 headers: {"Content-Type": "application/json"},
                 body: jsonEncode(payload),
               );
@@ -449,7 +449,7 @@ void showAddSnPoDialog(BuildContext context, String po, String barcode) {
 
                 try {
                   final response = await http.post(
-                    Uri.parse('http://192.168.1.116:8069/stock_receive_sn'),
+                    Uri.parse('http://192.168.1.115:8069/stock_receive_sn'),
                     headers: {"Content-Type": "application/json"},
                     body: jsonEncode(payload),
                   );

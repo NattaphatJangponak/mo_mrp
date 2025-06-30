@@ -42,6 +42,7 @@ class MenuPage extends StatelessWidget {
               );
             },
           ),
+
           _buildMenuTile(
             context,
             title: 'Internal transfer',
@@ -50,11 +51,27 @@ class MenuPage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => const SelectTransferPage(),
+                  builder: (_) => const ScanMenuDetailPage(
+                    mode: 'transfer',
+                  ),
                 ),
               );
             },
           ),
+
+          // _buildMenuTile(
+          //   context,
+          //   title: 'Internal transfer',
+          //   icon: Icons.compare_arrows,
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (_) => const SelectTransferPage(),
+          //       ),
+          //     );
+          //   },
+          // ),
           _buildMenuTile(
             context,
             title: 'Counting Stock',

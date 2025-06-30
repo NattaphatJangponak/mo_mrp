@@ -22,9 +22,13 @@ class _ScanMenuDetailPageState extends State<ScanMenuDetailPage> {
   @override
   void initState() {
     super.initState();
-    futureList = widget.mode == 'in'
-        ? HttpService().fetchWhInList()
-        : HttpService().fetchWhOutList();
+    if (widget.mode == 'in') {
+      futureList = HttpService().fetchWhInList();
+    } else if (widget.mode == 'out') {
+      futureList = HttpService().fetchWhOutList();
+    } else if (widget.mode == 'transfer') {
+      futureList = HttpService().fetchWhTrnList();
+    }
 
     futureList.then((data) {
       setState(() {
@@ -135,12 +139,12 @@ class _ScanMenuDetailPageState extends State<ScanMenuDetailPage> {
   }
 
   Widget _buildCard(BuildContext context, StockItem item) {
-    final String? docCode = widget.mode == 'in' ? item.po : item.so;
+    final String? docCode = widget.mode == 'transfer' ? item.code : (widget.mode == 'in' ? item.po : item.so);
     return Card(
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
-        leading: const Icon(Icons.image),
+        // leading: const Icon(Icons.image),
         title: Text(item.code),
         subtitle: Text(docCode ?? ''),
         trailing: const Icon(Icons.arrow_forward_ios),
