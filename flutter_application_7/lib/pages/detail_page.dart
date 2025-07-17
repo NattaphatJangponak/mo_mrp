@@ -5,7 +5,10 @@ import 'package:flutter_application_7/pages/sn_page.dart';
 
 import 'package:flutter_application_7/dialogs/dialog_add_so.dart';
 import 'package:flutter_application_7/dialogs/dialog_add_po.dart';
+
 import 'package:flutter_application_7/dialogs/dialog_prod_tranfer.dart';
+import 'package:flutter_application_7/dialogs/dialog_prod_tranfer_bar.dart';
+ import 'package:flutter_application_7/dialogs/dialog_prod_tranfer_sn.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -58,34 +61,84 @@ class DetailPage extends StatelessWidget {
             const SizedBox(height: 16),
             if (mode == 'transfer')
               // แสดงปุ่ม "Transfer Product" เท่านั้นเมื่อ mode == 'transfer'
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // ตัวอย่างโค้ดจากหน้าที่เรียกใช้ showTransferProductDialog
-                  FilledButton(
-                    onPressed: () {
-                      // ตรวจสอบค่าของ qty จาก data['qty'] ก่อน
-                      String qty = data['qty']?.toString() ??
-                          '0'; // ถ้าไม่มีค่าให้ใช้ '0' แทน
-
-                      // แสดงค่าของ qty สำหรับการตรวจสอบ
-                      print('Qty from Detail Page: $qty');
-
-                      // เรียกใช้ showTransferProductDialog พร้อมส่งค่า qty
-                      showTransferProductDialog(
-                        context,
-                        data['docCode'], // ส่ง data['docCode'] เป็น 'code'
-                        data['name'], // ส่ง data['name'] เป็น 'barcode'
-                        qty, // ส่ง qty จาก Detail Page
-                      );
-                    },
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.purple,
-                      foregroundColor: Colors.white,
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // ตัวอย่างโค้ดจากหน้าที่เรียกใช้ showTransferProductDialog
+                    FilledButton(
+                      onPressed: () {
+                        // ตรวจสอบค่าของ qty จาก data['qty'] ก่อน
+                        String qty = data['qty']?.toString() ??
+                            '0'; // ถ้าไม่มีค่าให้ใช้ '0' แทน
+                
+                        // แสดงค่าของ qty สำหรับการตรวจสอบ
+                        print('Qty from Detail Page: $qty');
+                
+                        // เรียกใช้ showTransferProductDialog พร้อมส่งค่า qty
+                        showTransferProductDialog(
+                          context,
+                          data['docCode'], // ส่ง data['docCode'] เป็น 'code'
+                          data['name'], // ส่ง data['name'] เป็น 'barcode'
+                          qty, // ส่ง qty จาก Detail Page
+                        );
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.amber,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Transfer Product'),
                     ),
-                    child: const Text('Transfer Product'),
-                  )
-                ],
+                
+                    FilledButton(
+                      onPressed: () {
+                        // ตรวจสอบค่าของ qty จาก data['qty'] ก่อน
+                        String qty = data['qty']?.toString() ??
+                            '0'; // ถ้าไม่มีค่าให้ใช้ '0' แทน
+                
+                        // แสดงค่าของ qty สำหรับการตรวจสอบ
+                        print('Qty from Detail Page: $qty');
+                
+                        // เรียกใช้ showTransferProductDialog พร้อมส่งค่า qty
+                        showTransferProductDialogBar(
+                          context,
+                          data['docCode'], // ส่ง data['docCode'] เป็น 'code'
+                          data['name'], // ส่ง data['name'] เป็น 'barcode'
+                          qty, // ส่ง qty จาก Detail Page
+                        );
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.pinkAccent,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Transfer Barcode'),
+                    ),
+                
+                    FilledButton(
+                      onPressed: () {
+                        // ตรวจสอบค่าของ qty จาก data['qty'] ก่อน
+                        String qty = data['qty']?.toString() ??
+                            '0'; // ถ้าไม่มีค่าให้ใช้ '0' แทน
+                
+                        // แสดงค่าของ qty สำหรับการตรวจสอบ
+                        print('Qty from Detail Page: $qty');
+                
+                        // เรียกใช้ showTransferProductDialog พร้อมส่งค่า qty
+                        showTransferProductDialogSn(
+                          context,
+                          data['docCode'], // ส่ง data['docCode'] เป็น 'code'
+                          data['name'], // ส่ง data['name'] เป็น 'barcode'
+                          qty, // ส่ง qty จาก Detail Page
+                        );
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.purple,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Transfer S/N'),
+                    )
+                  ],
+                ),
               ),
             if (mode != 'transfer')
               Row(

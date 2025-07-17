@@ -17,7 +17,7 @@ String extractBarcode(String barcode) {
   }
 }
 
-void showTransferProductDialog(
+void showTransferProductDialogSn(
     BuildContext context, String code, String barcode, String qty) {
   String qtyFormatted = qty;
   if (qty.isNotEmpty) {
@@ -92,7 +92,7 @@ void showTransferProductDialog(
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            title: const Text("Transfer Product"),
+            title: const Text("Transfer S/N"),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -195,16 +195,7 @@ void showTransferProductDialog(
                               child: TextFormField(
                                 controller: lotList[index]["lot"],
                                 decoration: InputDecoration(
-                                    labelText: 'Lot ${index + 1}'),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: TextFormField(
-                                controller: lotList[index]["qty"],
-                                keyboardType: TextInputType.number,
-                                decoration:
-                                    const InputDecoration(labelText: 'Qty'),
+                                    labelText: 'S/N ${index + 1}'),
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -233,7 +224,7 @@ void showTransferProductDialog(
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete),
-                              tooltip: 'Delete Lot ${index + 1}',
+                              tooltip: 'Delete S/N ${index + 1}',
                               onPressed: () {
                                 lotList.removeAt(index);
                               },
@@ -246,12 +237,11 @@ void showTransferProductDialog(
                   const SizedBox(height: 12),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.add),
-                    label: const Text("Add Lot"),
+                    label: const Text("Add S/N"),
                     onPressed: () {
                       setState(() {
                         lotList.add({
                           "lot": TextEditingController(),
-                          "qty": TextEditingController(),
                         });
                       });
                     },
@@ -296,13 +286,9 @@ void showTransferProductDialog(
                 onPressed: () async {
                   // ตรวจสอบข้อมูล lot_no และ issue_qty
                   final lots = lotList
-                      .where((lot) =>
-                          lot["lot"]!.text.isNotEmpty &&
-                          int.tryParse(lot["qty"]!.text) != null)
-                      .map((lot) => [
-                            lot["lot"]!.text,
-                            int.parse(lot["qty"]!.text)
-                          ]) // ใช้ List
+                      .where((lot) => lot["lot"]!.text.isNotEmpty)
+                      .map((lot) =>
+                          [lot["lot"]!.text]) // ส่งเฉพาะ lot เป็น list ซ้อน
                       .toList();
 
                   // สร้าง payload ในรูปแบบที่ต้องการ
@@ -314,11 +300,11 @@ void showTransferProductDialog(
                       "location_from":
                           selectedLocationFrom ?? "", // Location from
                       "location_to": selectedLocationTo ?? "", // Location to
+                      "lot_no":
+                          lots, // ส่งข้อมูล lot_no ในรูปแบบของ List<List<dynamic>>
                       "transfer_qty":
                           int.tryParse(issueQtyController.text.trim()) ??
                               0, // Transfer quantity
-                      "lot_no":
-                          lots, // ส่งข้อมูล lot_no ในรูปแบบของ List<List<dynamic>>
                     }
                   };
 
@@ -330,7 +316,7 @@ void showTransferProductDialog(
                     // ส่ง POST request ไปยัง API
                     final response = await http.post(
                       Uri.parse(
-                          "http://192.168.1.122:8069/set_tranfer_location_lot"),
+                          "http://192.168.1.122:8069/set_tranfer_location_sn"),
                       headers: {"Content-Type": "application/json"},
                       body: jsonEncode(payload), // แปลงข้อมูลเป็น JSON
                     );

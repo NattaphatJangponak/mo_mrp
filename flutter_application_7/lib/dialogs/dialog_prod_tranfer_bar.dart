@@ -17,7 +17,7 @@ String extractBarcode(String barcode) {
   }
 }
 
-void showTransferProductDialog(
+void showTransferProductDialogBar(
     BuildContext context, String code, String barcode, String qty) {
   String qtyFormatted = qty;
   if (qty.isNotEmpty) {
@@ -38,9 +38,6 @@ void showTransferProductDialog(
   final locationToController = TextEditingController();
   final barcodeFocus = FocusNode();
   TextEditingController? currentFocusController;
-  List<Map<String, TextEditingController>> lotList = [
-    {"lot": TextEditingController(), "qty": TextEditingController()}
-  ];
 
   // สร้างค่าของ barcode ที่แยกออกมาแล้วจากวงเล็บเหลี่ยม
   String extractedBarcode = extractBarcode(barcode);
@@ -92,7 +89,7 @@ void showTransferProductDialog(
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            title: const Text("Transfer Product"),
+            title: const Text("Transfer Barcode"),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -182,80 +179,6 @@ void showTransferProductDialog(
 
                   const SizedBox(height: 12),
 
-                  const SizedBox(height: 16),
-                  const Text("Lot List"),
-                  const SizedBox(height: 8),
-                  Column(
-                    children: List.generate(lotList.length, (index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: lotList[index]["lot"],
-                                decoration: InputDecoration(
-                                    labelText: 'Lot ${index + 1}'),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: TextFormField(
-                                controller: lotList[index]["qty"],
-                                keyboardType: TextInputType.number,
-                                decoration:
-                                    const InputDecoration(labelText: 'Qty'),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            IconButton(
-                              icon: const Icon(Icons.qr_code_scanner),
-                              tooltip: 'Scan to Lot ${index + 1}',
-                              onPressed: () async {
-                                final result =
-                                    await showQrScannerDialog(context);
-                                if (result != null) {
-                                  final text = lotList[index]["lot"]!.text;
-                                  final selection =
-                                      lotList[index]["lot"]!.selection;
-                                  final newText = text.replaceRange(
-                                    selection.start,
-                                    selection.end,
-                                    result,
-                                  );
-                                  lotList[index]["lot"]!.text = newText;
-                                  lotList[index]["lot"]!.selection =
-                                      TextSelection.collapsed(
-                                    offset: selection.start + result.length,
-                                  );
-                                }
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              tooltip: 'Delete Lot ${index + 1}',
-                              onPressed: () {
-                                lotList.removeAt(index);
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 12),
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.add),
-                    label: const Text("Add Lot"),
-                    onPressed: () {
-                      setState(() {
-                        lotList.add({
-                          "lot": TextEditingController(),
-                          "qty": TextEditingController(),
-                        });
-                      });
-                    },
-                  ),
                   const SizedBox(height: 12),
                   // Location from dropdown
                 ],
@@ -294,17 +217,6 @@ void showTransferProductDialog(
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () async {
-                  // ตรวจสอบข้อมูล lot_no และ issue_qty
-                  final lots = lotList
-                      .where((lot) =>
-                          lot["lot"]!.text.isNotEmpty &&
-                          int.tryParse(lot["qty"]!.text) != null)
-                      .map((lot) => [
-                            lot["lot"]!.text,
-                            int.parse(lot["qty"]!.text)
-                          ]) // ใช้ List
-                      .toList();
-
                   // สร้าง payload ในรูปแบบที่ต้องการ
                   final payload = {
                     "jsonrpc": "2.0",
@@ -317,8 +229,6 @@ void showTransferProductDialog(
                       "transfer_qty":
                           int.tryParse(issueQtyController.text.trim()) ??
                               0, // Transfer quantity
-                      "lot_no":
-                          lots, // ส่งข้อมูล lot_no ในรูปแบบของ List<List<dynamic>>
                     }
                   };
 
@@ -330,7 +240,7 @@ void showTransferProductDialog(
                     // ส่ง POST request ไปยัง API
                     final response = await http.post(
                       Uri.parse(
-                          "http://192.168.1.122:8069/set_tranfer_location_lot"),
+                          "http://192.168.1.122:8069/set_tranfer_location_barcode"),
                       headers: {"Content-Type": "application/json"},
                       body: jsonEncode(payload), // แปลงข้อมูลเป็น JSON
                     );

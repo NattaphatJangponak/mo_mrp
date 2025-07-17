@@ -197,7 +197,7 @@ void showAddLotSoDialog(BuildContext context, String so, String barcode) {
 
                   try {
                     final response = await http.post(
-                      Uri.parse("http://192.168.1.115:8069/stock_issue_lot"),
+                      Uri.parse("http://192.168.1.122:8069/stock_issue_lot"),
                       headers: {"Content-Type": "application/json"},
                       body: jsonEncode(payload),
                     );
@@ -320,7 +320,7 @@ void showAddBarSoDialog(BuildContext context, String so) {
 
             try {
               final response = await http.post(
-                Uri.parse('http://192.168.1.115:8069/stock_issue_barcode'),
+                Uri.parse('http://192.168.1.122:8069/stock_issue_barcode'),
                 headers: {"Content-Type": "application/json"},
                 body: jsonEncode(payload),
               );
@@ -538,7 +538,7 @@ void showAddSnSoDialog(BuildContext context, String so, String barcode) {
 
                 try {
                   final response = await http.post(
-                    Uri.parse('http://192.168.1.115:8069/stock_issue_sn'),
+                    Uri.parse('http://192.168.1.122:8069/stock_issue_sn'),
                     headers: {"Content-Type": "application/json"},
                     body: jsonEncode(payload),
                   );
