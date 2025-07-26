@@ -53,7 +53,7 @@ void showTransferProductDialogBar(
   String? selectedLocationTo; // เพิ่มตัวแปรสำหรับ Location To
 
   Future<void> _fetchLocationData() async {
-    final String url = 'http://192.168.1.122:8069/get_list_location';
+    final String url = 'http://172.20.10.4:8069/get_list_location';
     final uri = Uri.parse(url);
 
     final request = http.Request("GET", uri)
@@ -240,7 +240,7 @@ void showTransferProductDialogBar(
                     // ส่ง POST request ไปยัง API
                     final response = await http.post(
                       Uri.parse(
-                          "http://192.168.1.122:8069/set_tranfer_location_barcode"),
+                          "http://172.20.10.4:8069/set_tranfer_location_barcode"),
                       headers: {"Content-Type": "application/json"},
                       body: jsonEncode(payload), // แปลงข้อมูลเป็น JSON
                     );
